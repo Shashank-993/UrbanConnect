@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 const AdminServicesPage = () => {
@@ -6,61 +6,143 @@ const AdminServicesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
+  const [lastUpdate, setLastUpdate] = useState(Date.now()); // Track last update for key
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/pservices/services/admin/all",
-          {
-            withCredentials: true,
-          }
-        );
-        console.log("Raw services data from backend:", response.data); // Debug log
-        setServices(response.data || []); // Default to empty array if null/undefined
-      } catch (error) {
-        console.error("Error fetching services for admin:", error);
-        setServices([]); // Prevent crash on error
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchServices();
-  }, []);
-
-  const handleApprove = async (id, currentStatus) => {
+  // Define fetchServices as an inner function
+  const fetchServices = async () => {
     try {
-      const newStatus = !currentStatus;
-      await axios.patch(
-        `http://localhost:5000/pservices/approve/${id}`,
-        { approved: newStatus },
+      const response = await axios.get(
+        "http://localhost:5000/pservices/services/admin/all",
         {
           withCredentials: true,
         }
       );
-      setServices(
-        services.map((service) =>
-          service._id === id ? { ...service, approved: newStatus } : service
-        )
+      console.log("Raw services data from backend:", response.data); // Debug log
+      const data = response.data || [];
+      // Load cleared service IDs from localStorage
+      const clearedIds = JSON.parse(
+        localStorage.getItem("clearedServices") || "[]"
       );
+      const filteredData = data.filter(
+        (service) => !clearedIds.includes(service._id)
+      );
+      setServices([...filteredData]); // Spread to create new array reference
+      setLastUpdate(Date.now()); // Update timestamp
+      console.log("Services state after fetch:", filteredData); // Debug post-fetch state
     } catch (error) {
-      console.error("Error updating service approval:", error);
+      console.error(
+        "Error fetching services for admin:",
+        error.response?.data || error.message
+      );
+      setServices([]); // Prevent crash on error
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const filteredServices = services.filter((service) => {
-    // Safely handle missing properties
-    const name = service.name || "";
-    const category = service.category || "";
-    const matchesSearch =
-      name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      filterStatus === "All" ||
-      (filterStatus === "Approved" && service.approved) ||
-      (filterStatus === "Pending" && !service.approved);
-    return matchesSearch && matchesStatus;
-  });
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const handleApprove = async (id) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/pservices/approve/${id}`,
+        { approved: true, status: "approved" },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Approve response:", response.data); // Debug backend response
+      // Update state directly with response
+      setServices(
+        services.map((service) =>
+          service._id === id
+            ? { ...service, approved: true, status: "approved" }
+            : service
+        )
+      );
+      setLastUpdate(Date.now()); // Update timestamp
+      console.log("Services state after approve:", services); // Debug state
+    } catch (error) {
+      console.error(
+        "Error approving service:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:5000/pservices/approve/${id}`,
+        { approved: false, status: "rejected" },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Reject response:", response.data); // Debug backend response
+      // Update state directly with response data
+      const updatedService = response.data.service || {
+        ...services.find((s) => s._id === id),
+        approved: false,
+        status: "rejected",
+      };
+      setServices(
+        services.map((service) =>
+          service._id === id ? updatedService : service
+        )
+      );
+      setLastUpdate(Date.now()); // Update timestamp
+      console.log("Services state after reject (immediate):", services); // Debug state
+      // Re-fetch to ensure sync
+      await fetchServices();
+    } catch (error) {
+      console.error(
+        "Error rejecting service:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleClearService = (serviceId) => {
+    const updatedServices = services.filter((s) => s._id !== serviceId);
+    setServices([...updatedServices]); // Spread to create new array reference
+    setLastUpdate(Date.now()); // Update timestamp
+    // Update localStorage with cleared IDs
+    const clearedIds = JSON.parse(
+      localStorage.getItem("clearedServices") || "[]"
+    );
+    if (!clearedIds.includes(serviceId)) {
+      clearedIds.push(serviceId);
+      localStorage.setItem("clearedServices", JSON.stringify(clearedIds));
+    }
+  };
+
+  const filteredServices = useMemo(() => {
+    return services.filter((service) => {
+      const name = service.name || "";
+      const category = service.category || "";
+      const matchesSearch =
+        name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        category.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        filterStatus === "All" ||
+        (filterStatus === "Approved" &&
+          service.approved &&
+          service.status === "approved") ||
+        (filterStatus === "Pending" &&
+          !service.approved &&
+          service.status === "pending") ||
+        (filterStatus === "Pending" && service.status === "rejected");
+      console.log(
+        `Filtering service ${service._id}: matchesSearch=${matchesSearch}, matchesStatus=${matchesStatus}, approved=${service.approved}, status=${service.status}`
+      ); // Debug filter
+      return matchesSearch && matchesStatus;
+    });
+  }, [services, searchTerm, filterStatus]);
+
+  console.log("Rendered filteredServices:", filteredServices); // Debug rendered data
 
   if (isLoading) return <div className="text-center py-10">Loading...</div>;
 
@@ -85,7 +167,7 @@ const AdminServicesPage = () => {
           <option value="Pending">Pending</option>
         </select>
       </div>
-      <table className="w-full bg-white shadow-md rounded-lg">
+      <table className="w-full bg-white shadow-md rounded-lg" key={lastUpdate}>
         <thead>
           <tr className="bg-gray-200 text-left">
             <th className="p-3">ID</th>
@@ -98,25 +180,43 @@ const AdminServicesPage = () => {
         </thead>
         <tbody>
           {filteredServices.map((service) => (
-            <tr key={service._id} className="border-t">
+            <tr key={`${service._id}-${lastUpdate}`} className="border-t">
               <td className="p-3">{service._id}</td>
-              <td className="p-3">{service.name || "N/A"}</td>{" "}
-              {/* Fallback for missing name */}
-              <td className="p-3">{service.category || "N/A"}</td>{" "}
-              {/* Fallback for missing category */}
-              <td className="p-3">₹{service.price || 0}</td>{" "}
-              {/* Fallback for missing price */}
-              <td className="p-3">
-                {service.approved ? "Approved" : "Pending"}
+              <td className="p-3">{service.name || "N/A"}</td>
+              <td className="p-3">{service.category || "N/A"}</td>
+              <td className="p-3">₹{service.price || 0}</td>
+              <td
+                className="p-3"
+                data-status={
+                  service.status || (service.approved ? "Approved" : "Pending")
+                }
+                data-id={service._id}
+              >
+                <span className="status-text">
+                  {service.status ||
+                    (service.approved ? "Approved" : "Pending")}
+                </span>
               </td>
-              <td className="p-3">
+              <td className="p-3 flex space-x-2">
+                {service.status !== "rejected" && !service.approved && (
+                  <button
+                    onClick={() => handleApprove(service._id)}
+                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  >
+                    Approve
+                  </button>
+                )}
                 <button
-                  onClick={() => handleApprove(service._id, service.approved)}
-                  className={`px-4 py-2 rounded ${
-                    service.approved ? "bg-red-500" : "bg-green-500"
-                  } text-white`}
+                  onClick={() => handleReject(service._id)}
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 >
-                  {service.approved ? "Reject" : "Approve"}
+                  Reject
+                </button>
+                <button
+                  onClick={() => handleClearService(service._id)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                >
+                  Clear
                 </button>
               </td>
             </tr>
