@@ -1,0 +1,12 @@
+{
+  "name": "My App",
+  "short_name": "App",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "A description of my app",
+  "service_worker": {
+    "src": "service-worker.js",
+    "scope": "/"
+  }
+}

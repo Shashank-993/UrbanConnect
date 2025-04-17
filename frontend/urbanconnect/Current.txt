@@ -1,0 +1,481 @@
+JSX : 
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { ToastContainer, toast, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../../components/forms/usersignup.css";
+import Loader from "./Loader";
+// Removed ShapeDivider import
+import serviceProviders from "../../assets/services-removebg-preview.png"; // or your correct path
+
+const UserSignUp = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Sign-Up form hook
+  const {
+    register: registerSignUp,
+    handleSubmit: handleSubmitSignUp,
+    formState: { errors: errorsSignUp },
+  } = useForm();
+
+  // Sign-In form hook
+  const {
+    register: registerSignIn,
+    handleSubmit: handleSubmitSignIn,
+    formState: { errors: errorsSignIn },
+  } = useForm();
+
+  // Sign-Up Function
+  const onSubmitSignUp = async (data) => {
+    console.log("Sign Up Data:", data);
+    setLoading(true);
+    try {
+      const res = await axios.post("/user", data);
+      console.log("Response:", res);
+      if (res.status === 201) {
+        toast.success("Account created! Redirecting to Login...", {
+          position: "top-center",
+          autoClose: 1500,
+          theme: "dark",
+          transition: Slide,
+          onClose: () => {
+            document
+              .getElementById("container")
+              .classList.remove("right-panel-active");
+          },
+        });
+      } else {
+        toast.error("Something went wrong!", {
+          position: "top-center",
+          autoClose: 1500,
+          theme: "dark",
+          transition: Slide,
+        });
+      }
+    } catch (error) {
+      console.error("Signup API error:", error);
+      toast.error("Signup failed! Please try again.", {
+        position: "top-center",
+        autoClose: 1500,
+        theme: "dark",
+        transition: Slide,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Sign-In Function
+  const onSubmitSignIn = async (data) => {
+    setLoading(true);
+    try {
+      const res = await axios.post("/user/login", data);
+      console.log("Response:", res);
+      if (res.status === 200) {
+        localStorage.setItem("id", res.data.data._id);
+        localStorage.setItem("role", res.data.data.role);
+        toast.success("Welcome back!", {
+          position: "top-center",
+          autoClose: 1500,
+          theme: "light",
+          transition: Slide,
+        });
+        setTimeout(() => {
+          const role = res.data.data.role;
+          if (role === "Admin") {
+            navigate("/admin-dashboard");
+          } else {
+            navigate("/usersidebar");
+          }
+        }, 2000);
+      } else {
+        toast.error("Sign in failed!", {
+          position: "top-center",
+          autoClose: 1500,
+          theme: "dark",
+          transition: Slide,
+        });
+      }
+    } catch (error) {
+      console.error("Sign in API error:", error);
+      toast.error("Sign in failed! Please try again.", {
+        position: "top-center",
+        autoClose: 1500,
+        theme: "dark",
+        transition: Slide,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const signUpButton = document.getElementById("signUp");
+    const signInButton = document.getElementById("signIn");
+    const container = document.getElementById("container");
+
+    const handleSignUpClick = () =>
+      container.classList.add("right-panel-active");
+    const handleSignInClick = () =>
+      container.classList.remove("right-panel-active");
+
+    if (signUpButton && signInButton && container) {
+      signUpButton.addEventListener("click", handleSignUpClick);
+      signInButton.addEventListener("click", handleSignInClick);
+    }
+
+    return () => {
+      if (signUpButton && signInButton && container) {
+        signUpButton.removeEventListener("click", handleSignUpClick);
+        signInButton.removeEventListener("click", handleSignInClick);
+      }
+    };
+  }, []);
+
+  return (
+    // Use Tailwind to center the login-container
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      {/* Renamed class to login-container and kept id="container" for JS toggling */}
+      <div className="login-container" id="container">
+        <div className="form-container sign-up-container">
+          <form onSubmit={handleSubmitSignUp(onSubmitSignUp)}>
+            <h1>Create Account</h1>
+            <input
+              type="text"
+              placeholder="Name"
+              {...registerSignUp("name", { required: "Name is required" })}
+            />
+            {errorsSignUp.name && (
+              <span className="error">{errorsSignUp.name.message}</span>
+            )}
+            <input
+              type="email"
+              placeholder="Email"
+              {...registerSignUp("email", { required: "Email is required" })}
+            />
+            {errorsSignUp.email && (
+              <span className="error">{errorsSignUp.email.message}</span>
+            )}
+            <input
+              type="password"
+              placeholder="Password"
+              {...registerSignUp("password", {
+                required: "Password is required",
+              })}
+            />
+            {errorsSignUp.password && (
+              <span className="error">{errorsSignUp.password.message}</span>
+            )}
+            <button type="submit">Sign Up</button>
+          </form>
+        </div>
+
+        <div className="form-container sign-in-container">
+          <form onSubmit={handleSubmitSignIn(onSubmitSignIn)}>
+            <h1>Sign in</h1>
+            <input
+              type="email"
+              placeholder="Email"
+              {...registerSignIn("email", { required: "Email is required" })}
+            />
+            {errorsSignIn.email && (
+              <span className="error">{errorsSignIn.email.message}</span>
+            )}
+            <input
+              type="password"
+              placeholder="Password"
+              {...registerSignIn("password", {
+                required: "Password is required",
+              })}
+            />
+            {errorsSignIn.password && (
+              <span className="error">{errorsSignIn.password.message}</span>
+            )}
+            <Link to="/forgot-password">Forgot your password?</Link>
+            <button type="submit">Sign In</button>
+          </form>
+        </div>
+
+        <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <h1>Welcome Back!</h1>
+              <p>
+                To keep connected with us please login with your personal info
+              </p>
+              <button className="ghost" id="signIn">
+                Sign In
+              </button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <h1>Hello, Friend!</h1>
+              <p>Enter your personal details and start journey with us</p>
+              <button className="ghost" id="signUp">
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {loading && <Loader />}
+      <ToastContainer
+        position="top-center"
+        autoClose={1500}
+        hideProgressBar={false}
+        closeOnClick={false}
+        pauseOnHover
+        draggable
+        theme="dark"
+        transition={Slide}
+      />
+    </div>
+  );
+};
+
+export default UserSignUp;
+
+CSS : 
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
+
+* {
+  box-sizing: border-box;
+}
+
+/* Headings and Paragraphs */
+h1 {
+  font-weight: 900;
+  margin: 0 0 1rem 0;
+}
+
+p {
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 16.7px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+/* FORCE Button Colors */
+button,
+button[type="submit"] {
+  background-color: none !important;
+  border: 1px solid #ff4b2b !important;
+  color: #fff !important;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Ghost button remains transparent */
+button.ghost {
+  background-color: transparent !important;
+  border-color: #ffffff !important;
+}
+
+/* Form */
+form {
+  background-color: #ffffff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* Increase padding + gap for extra spacing */
+  padding: 2rem 3rem;
+  gap: 1.5rem;
+
+  height: 100%;
+  text-align: center;
+}
+
+input {
+  background-color: #ffffff;
+  border: 1px solid black;
+  color: rgb(0, 0, 0);
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+}
+
+/* Autofill fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #000 !important;
+  background-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+input:-moz-autofill {
+  -moz-text-fill-color: #000 !important;
+  background-color: #fff !important;
+}
+
+/* The main login container (renamed from .container) */
+.login-container {
+  position: relative;
+  width: 800px;      /* Adjust for desired width */
+  max-width: 90%;    /* Allows it to shrink on smaller screens */
+  min-height: 480px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+              0 10px 10px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+}
+
+/* Toggle classes for sign-in/sign-up animation */
+.login-container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
+}
+.login-container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+.login-container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+.login-container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+.login-container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+.login-container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+/* Form container halves */
+.form-container {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+.sign-in-container {
+  left: 0;
+  z-index: 2;
+}
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+/* Overlay container + panels */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.overlay {
+  background: linear-gradient(to right, rgb(0, 19, 74), rgb(3, 5, 103));
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: rgb(184, 4, 255);
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+/* EXTRA SPACING for the "Hello, Friend!" and "Welcome Back!" sections */
+.overlay-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Increase spacing here */
+  padding: 2rem;
+  gap: 1.5rem;
+
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+.overlay-left {
+  transform: translateX(-20%);
+}
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+@keyframes show {
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .login-container {
+    width: 90%;
+    min-height: auto;
+  }
+  .form-container {
+    width: 100%;
+    padding: 20px;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+  button {
+    padding: 10px 30px;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,44 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const app = express();
+
+module.exports = app;
+
+app.use(cors());
+app.use(express.json());
+
+const roleRoutes = require("./src/routes/RoleRoutes");
+app.use(roleRoutes);
+
+const userRoutes = require("./src/routes/UserRoutes");
+app.use(userRoutes);
+
+const areaRoutes = require("./src/routes/AreaRoutes");
+app.use(areaRoutes);
+
+const cityRoutes = require("./src/routes/CityRoutes");
+app.use(cityRoutes);
+
+const stateRoutes = require("./src/routes/StateRoutes");
+app.use(stateRoutes);
+
+const addressRoutes = require("./src/routes/UaddressRoutes");
+app.use(addressRoutes);
+
+const categoryRoutes = require("./src/routes/CategoryRoutes");
+app.use(categoryRoutes);
+
+const userCategoryRoutes = require("./src/routes/UserCategoryRoutes");
+app.use(userCategoryRoutes);
+
+mongoose.connect("mongodb://localhost:27017/node_internship").then(() => {
+  console.log("database connected...");
+});
+
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`Server started on port...${PORT}`);
+});
+
+

@@ -1,0 +1,648 @@
+ const services = [
+    // 1. Beauty & Wellness
+    // Women's Salon & Spa
+    {
+      id: 1,
+      name: "Facials & Clean-ups",
+      price: 700,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Revitalize your skin with a professional facial and clean-up, customized for a radiant glow.",
+      duration: "1 hour",
+      rating: "4.8/5",
+      stylist: "Priya Sharma",
+      stylistBio:
+        "Priya is a certified aesthetician with 8 years of experience in skincare treatments.",
+      availability: "Mon-Sat, 10 AM - 7 PM",
+    },
+    {
+      id: 2,
+      name: "Waxing",
+      price: 500,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Smooth, hair-free skin with our expert waxing services using high-quality products.",
+      duration: "45 minutes",
+      rating: "4.7/5",
+      stylist: "Anjali Rao",
+      stylistBio:
+        "Anjali specializes in painless waxing techniques with 6 years of experience.",
+      availability: "Mon-Sun, 9 AM - 6 PM",
+    },
+    {
+      id: 3,
+      name: "Manicure & Pedicure",
+      price: 600,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Pamper your hands and feet with a relaxing manicure and pedicure session.",
+      duration: "1 hour",
+      rating: "4.9/5",
+      stylist: "Sneha Patel",
+      stylistBio:
+        "Sneha is a nail care expert with a passion for detailed and creative designs.",
+      availability: "Daily, 10 AM - 8 PM",
+    },
+    {
+      id: 4,
+      name: "Hair Care (Haircuts, Treatments)",
+      price: 800,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Transform your hair with a stylish cut or nourishing treatment tailored to your needs.",
+      duration: "1 hour",
+      rating: "4.8/5",
+      stylist: "Meera Nair",
+      stylistBio:
+        "Meera has 10 years of experience in hair styling and advanced treatments.",
+      availability: "Mon-Sat, 9 AM - 7 PM",
+    },
+    {
+      id: 5,
+      name: "Threading & Face Waxing",
+      price: 300,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Precise threading and face waxing for perfectly shaped brows and smooth skin.",
+      duration: "30 minutes",
+      rating: "4.6/5",
+      stylist: "Kavita Desai",
+      stylistBio:
+        "Kavita excels in facial hair removal with 5 years of expertise.",
+      availability: "Daily, 10 AM - 6 PM",
+    },
+    {
+      id: 6,
+      name: "Bleach & Detan",
+      price: 400,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Brighten your complexion and remove tan with our gentle bleach and detan service.",
+      duration: "45 minutes",
+      rating: "4.7/5",
+      stylist: "Ritu Verma",
+      stylistBio:
+        "Ritu specializes in skin brightening with safe, effective techniques.",
+      availability: "Mon-Fri, 11 AM - 5 PM",
+    },
+
+    // Men's Salon & Massage
+    {
+      id: 7,
+      name: "Haircuts & Styling",
+      price: 400,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Sharp, stylish haircuts for men, customized to your preference.",
+      duration: "30 minutes",
+      rating: "4.7/5",
+      stylist: "Vikram Singh",
+      stylistBio:
+        "Vikram has 12 years of barbering expertise in modern and classic cuts.",
+      availability: "Daily, 9 AM - 8 PM",
+    },
+    {
+      id: 8,
+      name: "Beard Grooming",
+      price: 350,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Trim, shape, and groom your beard for a polished, professional look.",
+      duration: "30 minutes",
+      rating: "4.8/5",
+      stylist: "Rahul Mehra",
+      stylistBio:
+        "Rahul is a beard specialist with 7 years of grooming experience.",
+      availability: "Mon-Sun, 10 AM - 7 PM",
+    },
+    {
+      id: 9,
+      name: "Massages (Stress Relief, Pain Relief)",
+      price: 1200,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Relieve stress or pain with a therapeutic massage tailored to your needs.",
+      duration: "1.5 hours",
+      rating: "4.9/5",
+      stylist: "Arjun Kapoor",
+      stylistBio:
+        "Arjun is a certified massage therapist with 9 years of experience.",
+      availability: "Daily, 8 AM - 8 PM",
+    },
+
+    // Spa Services
+    {
+      id: 10,
+      name: "Ayurveda Spa",
+      price: 2000,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Experience holistic relaxation with traditional Ayurvedic spa therapies.",
+      duration: "2 hours",
+      rating: "4.9/5",
+      stylist: "Shalini Iyer",
+      stylistBio:
+        "Shalini is an Ayurveda expert with 15 years in wellness therapies.",
+      availability: "Mon-Sat, 10 AM - 6 PM",
+    },
+    {
+      id: 11,
+      name: "Luxury Spa Treatments",
+      price: 3000,
+      image: HAIR, // Temporary placeholder
+      category: "Beauty & Wellness",
+      description:
+        "Indulge in premium spa treatments for ultimate relaxation and rejuvenation.",
+      duration: "2.5 hours",
+      rating: "4.8/5",
+      stylist: "Tanya Bose",
+      stylistBio:
+        "Tanya specializes in luxury spa experiences with 12 years of expertise.",
+      availability: "By appointment",
+    },
+
+    // 2. Home Repairs & Maintenance
+    // Appliance Repair
+    {
+      id: 12,
+      name: "AC Service & Repair",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Expert repair and servicing for your air conditioner to ensure optimal cooling.",
+      duration: "2 hours",
+      rating: "4.9/5",
+      technician: "Amit Patel",
+      technicianBio:
+        "Amit is a licensed HVAC technician with over 10 years of experience.",
+      availability: "Mon-Sun, 8 AM - 6 PM",
+    },
+    {
+      id: 13,
+      name: "Washing Machine Repair",
+      price: 1000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Fix your washing machine with our professional repair service for all brands.",
+      duration: "1.5 hours",
+      rating: "4.7/5",
+      technician: "Suresh Kumar",
+      technicianBio: "Suresh has 8 years of experience in appliance repairs.",
+      availability: "Daily, 9 AM - 7 PM",
+    },
+    {
+      id: 14,
+      name: "Refrigerator Repair",
+      price: 1200,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Restore your refrigerator’s performance with expert repair services.",
+      duration: "2 hours",
+      rating: "4.8/5",
+      technician: "Ravi Menon",
+      technicianBio:
+        "Ravi is a certified technician with 12 years in refrigeration systems.",
+      availability: "Mon-Sat, 8 AM - 6 PM",
+    },
+    {
+      id: 15,
+      name: "Water Purifier Service",
+      price: 800,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Ensure clean drinking water with professional water purifier servicing.",
+      duration: "1 hour",
+      rating: "4.6/5",
+      technician: "Kiran Yadav",
+      technicianBio:
+        "Kiran specializes in water purifier maintenance with 6 years of experience.",
+      availability: "Daily, 10 AM - 5 PM",
+    },
+
+    // Cleaning Services
+    {
+      id: 16,
+      name: "Bathroom & Kitchen Deep Cleaning",
+      price: 1200,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Thorough cleaning of bathrooms and kitchens with eco-friendly products.",
+      duration: "3 hours",
+      rating: "4.8/5",
+      provider: "Sparkle Crew",
+      providerBio:
+        "Sparkle Crew focuses on sustainable cleaning with top-notch results.",
+      availability: "Mon-Fri, 9 AM - 5 PM",
+    },
+    {
+      id: 17,
+      name: "Sofa & Carpet Cleaning",
+      price: 1000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Revive your sofa and carpets with professional deep cleaning services.",
+      duration: "2 hours",
+      rating: "4.7/5",
+      provider: "Fresh Homes",
+      providerBio: "Fresh Homes specializes in upholstery and carpet care.",
+      availability: "Mon-Sun, 8 AM - 6 PM",
+    },
+    {
+      id: 18,
+      name: "Home Deep Cleaning",
+      price: 2000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Comprehensive cleaning for your entire home, leaving no corner untouched.",
+      duration: "4 hours",
+      rating: "4.9/5",
+      provider: "Clean Sweep",
+      providerBio:
+        "Clean Sweep offers detailed home cleaning with a skilled team.",
+      availability: "Daily, 9 AM - 7 PM",
+    },
+
+    // Pest Control
+    {
+      id: 19,
+      name: "Cockroach, Ant & Bed Bug Control",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Eliminate cockroaches, ants, and bed bugs with safe, effective pest control.",
+      duration: "2 hours",
+      rating: "4.8/5",
+      technician: "Manoj Gupta",
+      technicianBio:
+        "Manoj is a pest control expert with 10 years of experience.",
+      availability: "Mon-Sat, 8 AM - 6 PM",
+    },
+    {
+      id: 20,
+      name: "Mosquito & Rodent Control",
+      price: 1800,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Protect your home from mosquitoes and rodents with professional treatment.",
+      duration: "2.5 hours",
+      rating: "4.7/5",
+      technician: "Vijay Sharma",
+      technicianBio:
+        "Vijay specializes in advanced pest management techniques.",
+      availability: "Daily, 9 AM - 5 PM",
+    },
+
+    // Handyman Services
+    {
+      id: 21,
+      name: "Electrician",
+      price: 800,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Fix electrical issues or install new fixtures with our skilled electricians.",
+      duration: "1-2 hours",
+      rating: "4.9/5",
+      technician: "Rakesh Jain",
+      technicianBio:
+        "Rakesh is a certified electrician with 15 years of experience.",
+      availability: "Mon-Sun, 8 AM - 8 PM",
+    },
+    {
+      id: 22,
+      name: "Plumber",
+      price: 700,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Resolve leaks, clogs, or installations with our expert plumbing services.",
+      duration: "1-2 hours",
+      rating: "4.8/5",
+      technician: "Sanjay Thakur",
+      technicianBio:
+        "Sanjay has 12 years of plumbing expertise across residential projects.",
+      availability: "Daily, 9 AM - 7 PM",
+    },
+    {
+      id: 23,
+      name: "Carpenter",
+      price: 900,
+      image: HAIR, // Temporary placeholder
+      category: "Home Repairs & Maintenance",
+      description:
+        "Custom furniture repairs or installations by our skilled carpenters.",
+      duration: "2 hours",
+      rating: "4.7/5",
+      technician: "Anil Reddy",
+      technicianBio: "Anil is a master carpenter with 10 years in woodworking.",
+      availability: "Mon-Sat, 8 AM - 6 PM",
+    },
+
+    // 3. Home Improvement
+    // Painting Services
+    {
+      id: 24,
+      name: "Full Home Painting",
+      price: 5000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Improvement",
+      description:
+        "Transform your home with premium full-house painting services.",
+      duration: "2-3 days",
+      rating: "4.9/5",
+      provider: "ColorCraft Team",
+      providerBio:
+        "ColorCraft specializes in high-quality painting with 15 years of experience.",
+      availability: "Mon-Sat, 8 AM - 6 PM",
+    },
+    {
+      id: 25,
+      name: "Wall Waterproofing",
+      price: 2000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Improvement",
+      description:
+        "Protect your walls from leaks and dampness with expert waterproofing.",
+      duration: "1 day",
+      rating: "4.8/5",
+      provider: "DryWall Pros",
+      providerBio: "DryWall Pros offers durable waterproofing solutions.",
+      availability: "Mon-Fri, 9 AM - 5 PM",
+    },
+
+    // Smart Home Solutions
+    {
+      id: 26,
+      name: "Smart Lock Installation",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Home Improvement",
+      description:
+        "Upgrade your security with professional smart lock installation.",
+      duration: "1 hour",
+      rating: "4.7/5",
+      technician: "Nitin Bose",
+      technicianBio:
+        "Nitin specializes in smart home tech with 8 years of experience.",
+      availability: "Daily, 10 AM - 6 PM",
+    },
+    {
+      id: 27,
+      name: "Home Automation",
+      price: 5000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Improvement",
+      description:
+        "Automate your home with smart lighting, climate control, and more.",
+      duration: "4-6 hours",
+      rating: "4.9/5",
+      technician: "Kunal Mehra",
+      technicianBio:
+        "Kunal is an expert in home automation systems with 10 years in the field.",
+      availability: "By appointment",
+    },
+
+    // 4. Health & Fitness
+    // Fitness Training
+    {
+      id: 28,
+      name: "Yoga Instructors",
+      price: 800,
+      image: HAIR, // Temporary placeholder
+      category: "Health & Fitness",
+      description:
+        "Personalized yoga sessions at home for flexibility and mindfulness.",
+      duration: "1 hour",
+      rating: "4.7/5",
+      instructor: "Neha Gupta",
+      instructorBio:
+        "Neha is a certified yoga trainer with 7 years in holistic wellness.",
+      availability: "Daily, 6 AM - 8 PM",
+    },
+    {
+      id: 29,
+      name: "Personal Trainers",
+      price: 1000,
+      image: HAIR, // Temporary placeholder
+      category: "Health & Fitness",
+      description: "Custom fitness training at home to meet your health goals.",
+      duration: "1 hour",
+      rating: "4.8/5",
+      instructor: "Rohan Malhotra",
+      instructorBio:
+        "Rohan is a fitness coach with 9 years of training experience.",
+      availability: "Mon-Sat, 6 AM - 9 PM",
+    },
+
+    // Physiotherapy
+    {
+      id: 30,
+      name: "At-home Physiotherapy Sessions",
+      price: 1200,
+      image: HAIR, // Temporary placeholder
+      category: "Health & Fitness",
+      description:
+        "Recover faster with personalized physiotherapy sessions at home.",
+      duration: "1 hour",
+      rating: "4.9/5",
+      therapist: "Dr. Sonia Arora",
+      therapistBio:
+        "Dr. Sonia is a licensed physiotherapist with 12 years of expertise.",
+      availability: "Mon-Fri, 9 AM - 6 PM",
+    },
+
+    // 5. Events & Occasions
+    // Makeup & Hairstyling
+    {
+      id: 31,
+      name: "Party Makeup",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Events & Occasions",
+      description:
+        "Glam up for any event with stunning party makeup tailored to your style.",
+      duration: "1.5 hours",
+      rating: "4.8/5",
+      stylist: "Lina Dutta",
+      stylistBio:
+        "Lina is a makeup artist with 8 years of experience in event styling.",
+      availability: "By appointment",
+    },
+    {
+      id: 32,
+      name: "Bridal Makeup",
+      price: 3000,
+      image: HAIR, // Temporary placeholder
+      category: "Events & Occasions",
+      description:
+        "Look breathtaking on your big day with expert bridal makeup services.",
+      duration: "2 hours",
+      rating: "4.9/5",
+      stylist: "Riya Kapoor",
+      stylistBio:
+        "Riya is a bridal makeup expert with 10 years in high-end events.",
+      availability: "By appointment",
+    },
+
+    // Henna Services
+    {
+      id: 33,
+      name: "Traditional & Modern Henna Designs",
+      price: 1000,
+      image: HAIR, // Temporary placeholder
+      category: "Events & Occasions",
+      description:
+        "Beautiful henna designs for any occasion, from traditional to contemporary.",
+      duration: "1-2 hours",
+      rating: "4.7/5",
+      stylist: "Farida Khan",
+      stylistBio:
+        "Farida is a henna artist with 15 years of intricate design experience.",
+      availability: "Daily, 10 AM - 6 PM",
+    },
+
+    // Photography
+    {
+      id: 34,
+      name: "Event Photography",
+      price: 2500,
+      image: HAIR, // Temporary placeholder
+      category: "Events & Occasions",
+      description:
+        "Capture your special moments with professional event photography.",
+      duration: "3 hours",
+      rating: "4.8/5",
+      provider: "SnapVibe Studio",
+      providerBio: "SnapVibe specializes in high-quality event photography.",
+      availability: "By appointment",
+    },
+    {
+      id: 35,
+      name: "Portrait Sessions",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Events & Occasions",
+      description:
+        "Stunning portrait photography to showcase your personality.",
+      duration: "1.5 hours",
+      rating: "4.7/5",
+      provider: "PixelCraft",
+      providerBio:
+        "PixelCraft offers creative portrait solutions with 10 years of experience.",
+      availability: "Mon-Sat, 9 AM - 5 PM",
+    },
+
+    // 6. Home Services
+    // Packers & Movers
+    {
+      id: 36,
+      name: "Relocation Services",
+      price: 4000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Stress-free relocation with professional packing and moving services.",
+      duration: "4-6 hours",
+      rating: "4.8/5",
+      provider: "Swift Relocators",
+      providerBio:
+        "Swift Relocators ensures safe and efficient moving services.",
+      availability: "Mon-Sun, 7 AM - 7 PM",
+    },
+    {
+      id: 37,
+      name: "Furniture Shifting",
+      price: 2000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Move heavy furniture within your home or to a new location with ease.",
+      duration: "2-3 hours",
+      rating: "4.7/5",
+      provider: "MoveMasters",
+      providerBio:
+        "MoveMasters specializes in furniture handling and shifting.",
+      availability: "Daily, 8 AM - 6 PM",
+    },
+
+    // Laundry & Dry Cleaning
+    {
+      id: 38,
+      name: "Clothes Washing & Ironing",
+      price: 500,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Freshly washed and perfectly ironed clothes delivered to your door.",
+      duration: "24 hours",
+      rating: "4.6/5",
+      provider: "CleanWear",
+      providerBio:
+        "CleanWear offers reliable laundry services with quick turnaround.",
+      availability: "Mon-Sat, 9 AM - 5 PM",
+    },
+    {
+      id: 39,
+      name: "Dry Cleaning",
+      price: 800,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Professional dry cleaning for delicate fabrics and special garments.",
+      duration: "48 hours",
+      rating: "4.8/5",
+      provider: "Pristine Care",
+      providerBio:
+        "Pristine Care excels in dry cleaning with advanced techniques.",
+      availability: "Mon-Fri, 10 AM - 6 PM",
+    },
+
+    // Cooking Services
+    {
+      id: 40,
+      name: "At-home Chefs",
+      price: 1500,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Enjoy delicious home-cooked meals prepared by professional chefs.",
+      duration: "2 hours",
+      rating: "4.9/5",
+      provider: "TasteBuds",
+      providerBio: "TasteBuds brings culinary expertise to your kitchen.",
+      availability: "Daily, 10 AM - 8 PM",
+    },
+    {
+      id: 41,
+      name: "Meal Preparation",
+      price: 1000,
+      image: HAIR, // Temporary placeholder
+      category: "Home Services",
+      description:
+        "Healthy, pre-prepared meals customized to your dietary needs.",
+      duration: "1.5 hours",
+      rating: "4.7/5",
+      provider: "Healthy Bites",
+      providerBio: "Healthy Bites focuses on nutritious and tasty meal prep.",
+      availability: "Mon-Sat, 9 AM - 5 PM",
+    },
+  ];

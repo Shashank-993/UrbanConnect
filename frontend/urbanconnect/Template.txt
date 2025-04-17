@@ -1,0 +1,383 @@
+UserSignUp.jsx : 
+import React, { useState } from 'react';
+import './usersignup.css';
+
+const UserSignUp = () => {
+  const [rightPanelActive, setRightPanelActive] = useState(false);
+
+  return (
+    <div className="usersignup-root">
+      <div
+        className={`usersignup-container ${rightPanelActive ? "right-panel-active" : ""}`}
+        id="usersignup-container"
+      >
+        {/* Sign Up Form */}
+        <div className="usersignup-form-container usersignup-sign-up-container">
+          <form action="#">
+            <h1>Create Account</h1>
+            <div className="usersignup-social-container">
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-google-plus-g"></i>
+              </a>
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+            <span>or use your email for registration</span>
+            <input type="text" placeholder="Name" />
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Password" />
+            <button type="button">Sign Up</button>
+          </form>
+        </div>
+
+        {/* Sign In Form */}
+        <div className="usersignup-form-container usersignup-sign-in-container">
+          <form action="#">
+            <h1>Sign in</h1>
+            <div className="usersignup-social-container">
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-google-plus-g"></i>
+              </a>
+              <a href="#" className="usersignup-social">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+            <span>or use your account</span>
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Password" />
+            <a href="#">Forgot your password?</a>
+            <button type="button">Sign In</button>
+          </form>
+        </div>
+
+        {/* Overlay */}
+        <div className="usersignup-overlay-container">
+          <div className="usersignup-overlay">
+            <div className="usersignup-overlay-panel usersignup-overlay-left">
+              <h1>Welcome Back!</h1>
+              <p>
+                To keep connected with us please login with your personal info
+              </p>
+              <button
+                className="usersignup-ghost"
+                id="signIn"
+                onClick={() => setRightPanelActive(false)}
+                type="button"
+              >
+                Sign In
+              </button>
+            </div>
+            <div className="usersignup-overlay-panel usersignup-overlay-right">
+              <h1>Hello, Friend!</h1>
+              <p>
+                Enter your personal details and start journey with us
+              </p>
+              <button
+                className="usersignup-ghost"
+                id="signUp"
+                onClick={() => setRightPanelActive(true)}
+                type="button"
+              >
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer className="usersignup-footer">
+        <p>
+          Created with <i className="fa fa-heart"></i> by{" "}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://florin-pop.com"
+          >
+            Florin Pop
+          </a>{" "}
+          - Read how I created this and how you can join the challenge{" "}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/"
+          >
+            here
+          </a>
+          .
+        </p>
+      </footer>
+    </div>
+  );
+};
+
+export default UserSignUp;
+
+usersignup.css : 
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+/* Root container for the component */
+.usersignup-root {
+  background: #f6f5f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  margin: -20px 0 50px;
+}
+
+/* Ensure only this component’s children use the box-sizing */
+.usersignup-root * {
+  box-sizing: border-box;
+}
+
+.usersignup-root h1 {
+  font-weight: bold;
+  margin: 0;
+}
+
+.usersignup-root h2 {
+  text-align: center;
+}
+
+.usersignup-root p {
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  margin: 20px 0 30px;
+}
+
+.usersignup-root span {
+  font-size: 12px;
+}
+
+.usersignup-root a {
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  margin: 15px 0;
+}
+
+.usersignup-root button {
+  border-radius: 20px;
+  border: 1px solid #ff4b2b;
+  background-color: #ff4b2b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  cursor: pointer;
+}
+
+.usersignup-root button:active {
+  transform: scale(0.95);
+}
+
+.usersignup-root button:focus {
+  outline: none;
+}
+
+.usersignup-root button.usersignup-ghost {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+
+.usersignup-root form {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+
+.usersignup-root input {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+}
+
+/* Main container */
+.usersignup-container {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+}
+
+/* Form containers */
+.usersignup-form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.usersignup-sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.usersignup-container.right-panel-active .usersignup-sign-in-container {
+  transform: translateX(100%);
+}
+
+.usersignup-sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.usersignup-container.right-panel-active .usersignup-sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+/* Overlay container */
+.usersignup-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.usersignup-container.right-panel-active .usersignup-overlay-container {
+  transform: translateX(-100%);
+}
+
+.usersignup-overlay {
+  background: #ff416c;
+  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #ffffff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.usersignup-container.right-panel-active .usersignup-overlay {
+  transform: translateX(50%);
+}
+
+.usersignup-overlay-panel {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.usersignup-overlay-left {
+  transform: translateX(-20%);
+}
+
+.usersignup-container.right-panel-active .usersignup-overlay-left {
+  transform: translateX(0);
+}
+
+.usersignup-overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.usersignup-container.right-panel-active .usersignup-overlay-right {
+  transform: translateX(20%);
+}
+
+/* Social container */
+.usersignup-social-container {
+  margin: 20px 0;
+}
+
+.usersignup-social-container a {
+  border: 1px solid #dddddd;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+}
+
+/* Footer */
+.usersignup-footer {
+  background-color: #222;
+  color: #fff;
+  font-size: 14px;
+  bottom: 0;
+  position: fixed;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 999;
+}
+
+.usersignup-footer p {
+  margin: 10px 0;
+}
+
+.usersignup-footer i {
+  color: red;
+}
+
+.usersignup-footer a {
+  color: #3c97bf;
+  text-decoration: none;
+}
