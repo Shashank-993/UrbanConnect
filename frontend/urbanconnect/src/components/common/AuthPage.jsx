@@ -122,13 +122,13 @@ export default function AuthPage() {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include", // Send session cookie
+            credentials: "include",
             body: JSON.stringify({
               fullName: formData.fullName,
               email: formData.email,
               password: formData.password,
               phone: formData.phone || "",
-              userType: userType, // "user" or "provider"
+              userType: userType,
             }),
           }
         );
@@ -211,7 +211,7 @@ export default function AuthPage() {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include", // Send session cookie
+            credentials: "include",
             body: JSON.stringify({
               email: formData.email,
               password: formData.password,
@@ -233,9 +233,8 @@ export default function AuthPage() {
             transition: Slide,
           });
 
-          // Redirect based on userType
           setTimeout(() => {
-            console.log("Login response:", result); // Debug log
+            console.log("Login response:", result);
             const redirectPath =
               result.data.userType === "provider" ? "/provider" : "/profile";
             navigate(redirectPath);
@@ -271,6 +270,7 @@ export default function AuthPage() {
       }
     }
   };
+
   const handleGoogleLogin = () => {
     setIsLoading(true);
 
@@ -346,8 +346,8 @@ export default function AuthPage() {
                 onClick={() => setActiveTab("login")}
                 className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
                   activeTab === "login"
-                    ? "bg-white  text-gray-900 hover:border-slate-100"
-                    : "bg-white  text-gray-900 hover:border-slate-100"
+                    ? "bg-white text-gray-900 hover:border-slate-100"
+                    : "bg-white text-gray-900 hover:border-slate-100"
                 }`}
               >
                 Login
@@ -362,7 +362,7 @@ export default function AuthPage() {
                 onClick={() => setActiveTab("signup")}
                 className={`flex-1 py-4 text-sm font-medium transition-colors relative ${
                   activeTab === "signup"
-                    ? "bg-white  text-gray-900 hover:border-slate-100"
+                    ? "bg-white text-gray-900 hover:border-slate-100"
                     : "bg-white text-gray-900 hover:border-slate-100"
                 }`}
               >
@@ -559,7 +559,7 @@ export default function AuthPage() {
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="w-full py-3 h-auto bg-gray-900 hover:border-gray-800 hover:bg-gray-800 text-white rounded-lg font-medium text-sm transition-colors"
+                          className="w-full py-3 h-auto bg-gray-900 hover:border-gray-800 hover:bg-gray-800 text-white rounded-lg font-medium text-sm transition-colors mb-4"
                         >
                           {isLoading ? (
                             <Loader2 className="h-5 w-5 animate-spin mr-2" />
@@ -567,6 +567,16 @@ export default function AuthPage() {
                             "Login"
                           )}
                         </Button>
+
+                        {/* Login as Admin Button */}
+                        <Link to="/adminauth">
+                          <Button
+                            type="button"
+                            className="w-full py-3 h-auto bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium text-sm transition-colors"
+                          >
+                            Login as Admin
+                          </Button>
+                        </Link>
                       </>
                     )}
 
@@ -821,7 +831,7 @@ export default function AuthPage() {
                         <Button
                           type="submit"
                           disabled={isLoading}
-                          className="w-full py-3 h-auto bg-gray-900 hover:border-gray-800 hover:bg-gray-800 text-white rounded-lg font-medium text-sm transition-colors"
+                          className="w-full py-3 h-auto bg-gray-900 hover:border-gray-800 hover:bg-gray-800 text-white rounded-lg font-medium text-sm transition-colors mb-4"
                         >
                           {isLoading ? (
                             <Loader2 className="h-5 w-5 animate-spin mr-2" />
@@ -829,6 +839,16 @@ export default function AuthPage() {
                             "Create Account"
                           )}
                         </Button>
+
+                        {/* Signup as Admin Button */}
+                        <Link to="/adminauth">
+                          <Button
+                            type="button"
+                            className="w-full py-3 h-auto bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium text-sm transition-colors"
+                          >
+                            Signup as Admin
+                          </Button>
+                        </Link>
                       </>
                     )}
                   </form>

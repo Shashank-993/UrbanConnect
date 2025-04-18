@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import {
   Search,
-  Eye,
   Phone,
   Mail,
   Calendar,
@@ -94,41 +93,42 @@ export default function ClientsPage() {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         <motion.div
           variants={cardVariants}
-          whileHover={{ scale: 1.0 }}
-          className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-purple-300/75"
-          style={{ border: "1px solid rgba(196, 181, 253, 0.75)" }}
+          whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-100 overflow-hidden transition-all duration-300"
         >
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Clients</h2>
-            <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold text-slate-800 mb-8 tracking-tight">
+              Clients
+            </h2>
+            <div className="flex flex-col sm:flex-row justify-between gap-5 mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search clients..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-100/50 rounded-xl border border-gray-200/50 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500/50 transition-all duration-200"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200/50">
-                <thead className="bg-gray-50/50">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50/80">
                   <tr>
                     {["Name", "Email", "Phone", "Next Appointment"].map(
                       (col) => (
                         <th
                           key={col}
-                          className="py-3 px-4 text-left text-sm font-semibold text-gray-700"
+                          className="py-4 px-6 text-left text-sm font-semibold text-slate-700 tracking-wider"
                         >
                           {col}
                         </th>
@@ -136,7 +136,7 @@ export default function ClientsPage() {
                     )}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200/50">
+                <tbody className="divide-y divide-slate-200 bg-white">
                   <AnimatePresence>
                     {currentClients.map((client) => (
                       <motion.tr
@@ -145,19 +145,36 @@ export default function ClientsPage() {
                         initial="hidden"
                         animate="visible"
                         exit={{ opacity: 0, x: 20 }}
-                        className="hover:bg-gray-100/50 transition-colors duration-200"
+                        className="hover:bg-slate-50 transition-colors duration-200"
                       >
-                        <td className="py-4 px-4 text-sm font-medium text-gray-900">
+                        <td className="py-4 px-6 text-sm font-medium text-slate-800">
                           {client.fullName}
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
-                          {client.email}
+                        <td className="py-4 px-6 text-sm text-slate-600">
+                          <span className="flex items-center">
+                            <Mail className="h-4 w-4 mr-1.5 text-slate-400" />
+                            {client.email}
+                          </span>
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
-                          {client.phone}
+                        <td className="py-4 px-6 text-sm text-slate-600">
+                          <span className="flex items-center">
+                            <Phone className="h-4 w-4 mr-1.5 text-slate-400" />
+                            {client.phone}
+                          </span>
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
-                          {client.nextAppointment || "None"}
+                        <td className="py-4 px-6 text-sm text-slate-600">
+                          {client.nextAppointment ? (
+                            <span className="flex items-center">
+                              <Calendar className="h-4 w-4 mr-1.5 text-indigo-500" />
+                              <span className="font-medium">
+                                {client.nextAppointment}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-500 italic">
+                              None scheduled
+                            </span>
+                          )}
                         </td>
                       </motion.tr>
                     ))}
@@ -166,22 +183,22 @@ export default function ClientsPage() {
               </table>
             </div>
             {filteredClients.length > clientsPerPage && (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="text-sm text-gray-600">
+              <div className="mt-8 flex items-center justify-between">
+                <p className="text-sm text-slate-600 font-medium">
                   Showing {indexOfFirstClient + 1} to{" "}
                   {Math.min(indexOfLastClient, filteredClients.length)} of{" "}
                   {filteredClients.length} clients
                 </p>
                 <div className="flex items-center space-x-2">
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
                     className={`p-2 rounded-full ${
                       currentPage === 1
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -190,13 +207,13 @@ export default function ClientsPage() {
                     (page) => (
                       <motion.button
                         key={page}
-                        whileHover={{ scale: 1.01 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded-xl text-sm ${
+                        className={`px-3.5 py-1.5 rounded-xl text-sm font-medium ${
                           currentPage === page
-                            ? "bg-gray-800 text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            ? "bg-indigo-600 text-white shadow-md"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         } transition-all duration-200`}
                       >
                         {page}
@@ -204,14 +221,14 @@ export default function ClientsPage() {
                     )
                   )}
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(currentPage + 1)}
                     className={`p-2 rounded-full ${
                       currentPage === totalPages
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronRight className="h-4 w-4" />

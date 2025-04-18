@@ -65,23 +65,8 @@ app.use("/roles", roleRoutes);
 const userRoutes = require("./src/routes/UserRoutes");
 app.use("/users", userRoutes);
 
-const areaRoutes = require("./src/routes/AreaRoutes");
-app.use("/areas", areaRoutes);
-
-const cityRoutes = require("./src/routes/CityRoutes");
-app.use("/cities", cityRoutes);
-
-const stateRoutes = require("./src/routes/StateRoutes");
-app.use("/states", stateRoutes);
-
-const addressRoutes = require("./src/routes/UaddressRoutes");
-app.use("/addresses", addressRoutes);
-
-const categoryRoutes = require("./src/routes/CategoryRoutes");
-app.use("/categories", categoryRoutes);
-
-const userCategoryRoutes = require("./src/routes/UserCategoryRoutes");
-app.use("/usercategories", userCategoryRoutes);
+const clientRoutes = require("./src/routes/ClientRoutes");
+app.use("/clients", clientRoutes);
 
 const paymentRoutes = require("./src/routes/RazorRoutes");
 app.use(paymentRoutes);
@@ -95,8 +80,7 @@ app.use("/profile", profileRoutes);
 const appointmentRoutes = require("./src/routes/AppointmentRoutes");
 app.use("/appointments", appointmentRoutes);
 
-const clientRoutes = require("./src/routes/ClientRoutes");
-app.use("/clients", clientRoutes);
+
 
 const adminRoutes = require("./src/routes/AdminRoutes");
 app.use("/auth/admin", adminRoutes); // Matches AdminAuth.jsx endpoints

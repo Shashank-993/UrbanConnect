@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ACINSTALL from "./img/acinstallation.jpg";
 
 // Loader Component with new SVG
 const Loader = () => (
@@ -178,7 +179,7 @@ export default function HomePage() {
           <div className="flex h-16 items-center justify-between">
             <div>
               <Link to="/home">
-                <span className="text-2xl text-purple-400 font-bold tracking-tight">
+                <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-[#000000] to-[#434343] text-transparent bg-clip-text">
                   Urban Connect
                 </span>
               </Link>
@@ -229,7 +230,9 @@ export default function HomePage() {
               className="fixed inset-0 z-50 bg-white md:hidden"
             >
               <div className="flex h-16 items-center justify-between px-4">
-                <span className="text-xl font-bold">Urban Connect</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-[#000000] to-[#434343] text-transparent bg-clip-text">
+                  Urban Connect
+                </span>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -306,7 +309,7 @@ export default function HomePage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16 items-center">
               <div className="max-w-2xl">
-                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-gray-600 via-gray-800 to-gray-900 text-transparent bg-clip-text">
+                <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl bg-gradient-to-r from-[#8e2de2] to-[#4a00e0] text-transparent bg-clip-text">
                   Seamless Urban Services at Your Fingertips
                 </h1>
                 <p className="mt-6 text-lg text-gray-600">
@@ -333,7 +336,7 @@ export default function HomePage() {
               <div className="hidden lg:block relative h-[400px] w-full">
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent z-10 rounded-xl"></div>
                 <img
-                  src="/placeholder.svg?height=400&width=600"
+                  src={ACINSTALL}
                   alt="Urban Services Illustration"
                   className="absolute inset-0 w-full h-full object-cover rounded-xl"
                 />
@@ -605,7 +608,7 @@ export default function HomePage() {
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6 bg-gradient-to-r from-[#aaffa9] to-[#11ffbd] text-transparent bg-clip-text">
                 Ready to Transform Your Urban Living Experience?
               </h2>
               <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">

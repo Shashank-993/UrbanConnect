@@ -5,7 +5,7 @@ const Payment = require("../models/RazorModel"); // Import the Payment model
 module.exports = {
   checkout: async (req, res) => {
     const options = {
-      amount: Number(req.body.amount * 100), // amount in paise
+      amount: Number(req.body.amount ), // amount in paise
       currency: "INR",
       receipt: "order_rcptid_11",
     };

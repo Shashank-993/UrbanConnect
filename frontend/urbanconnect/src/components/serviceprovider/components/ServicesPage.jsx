@@ -98,6 +98,7 @@ export default function ServicesPage() {
       };
       img.onerror = () => reject(new Error("Invalid image file"));
       img.src = URL.createObjectURL(file);
+      img.crossOrigin = "anonymous";
     });
   };
 
@@ -281,17 +282,17 @@ export default function ServicesPage() {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         <div className="flex justify-end">
           <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center px-4 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition-all duration-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex items-center px-5 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg font-medium text-sm"
             onClick={() => setAddModalOpen(true)}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -301,15 +302,16 @@ export default function ServicesPage() {
 
         <motion.div
           variants={cardVariants}
-          className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-purple-300/75"
+          whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-100 overflow-hidden transition-all duration-300"
         >
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold text-slate-800 mb-8 tracking-tight">
               My Services
             </h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200/50">
-                <thead className="bg-gray-50/50">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50/80">
                   <tr>
                     {[
                       "Service Name",
@@ -320,51 +322,57 @@ export default function ServicesPage() {
                     ].map((col) => (
                       <th
                         key={col}
-                        className="py-3 px-4 text-left text-sm font-semibold text-gray-700"
+                        className="py-4 px-6 text-left text-sm font-semibold text-slate-700 tracking-wider"
                       >
                         {col}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200/50">
+                <tbody className="divide-y divide-slate-200 bg-white">
                   {currentServices.map((service) => (
                     <tr
                       key={service.id}
-                      className="hover:bg-gray-100/50 transition-colors duration-200"
+                      className="hover:bg-slate-50 transition-colors duration-200"
                     >
-                      <td className="py-4 px-4 text-sm font-medium text-gray-900">
+                      <td className="py-4 px-6 text-sm font-medium text-slate-800">
                         {service.name || "N/A"}
                       </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
+                      <td className="py-4 px-6 text-sm text-slate-600">
                         {service.duration ? `${service.duration} min` : "N/A"}
                       </td>
-                      <td className="py-4 px-4 text-sm text-gray-600">
+                      <td className="py-4 px-6 text-sm text-slate-600">
                         ${service.price ? service.price.toFixed(2) : "0.00"}
                       </td>
-                      <td className="py-4 px-4 text-sm">
+                      <td className="py-4 px-6 text-sm">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                             service.active
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-slate-100 text-slate-800"
                           }`}
                         >
                           {service.active ? "Active" : "Inactive"}
                         </span>
                       </td>
-                      <td className="py-4 px-4 text-sm text-right">
-                        <div className="flex justify-end space-x-2">
+                      <td className="py-4 px-6 text-sm text-right">
+                        <div className="flex justify-end space-x-3">
                           <motion.button
-                            whileHover={{ scale: 1.01 }}
+                            whileHover={{
+                              scale: 1.05,
+                              backgroundColor: "#f1f5f9",
+                            }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleEditService(service)}
-                            className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all duration-200"
+                            className="p-2 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all duration-200"
                           >
                             <Edit className="h-4 w-4" />
                           </motion.button>
                           <motion.button
-                            whileHover={{ scale: 1.01 }}
+                            whileHover={{
+                              scale: 1.05,
+                              backgroundColor: "#fee2e2",
+                            }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => handleDeleteService(service.id)}
                             className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-all duration-200"
@@ -379,22 +387,22 @@ export default function ServicesPage() {
               </table>
             </div>
             {services.length > servicesPerPage && (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="text-sm text-gray-600">
+              <div className="mt-8 flex items-center justify-between">
+                <p className="text-sm text-slate-600 font-medium">
                   Showing {indexOfFirstService + 1} to{" "}
                   {Math.min(indexOfLastService, services.length)} of{" "}
                   {services.length} services
                 </p>
                 <div className="flex items-center space-x-2">
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
                     className={`p-2 rounded-full ${
                       currentPage === 1
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -403,13 +411,13 @@ export default function ServicesPage() {
                     (page) => (
                       <motion.button
                         key={page}
-                        whileHover={{ scale: 1.01 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded-xl text-sm ${
+                        className={`px-3.5 py-1.5 rounded-xl text-sm font-medium ${
                           currentPage === page
-                            ? "bg-gray-800 text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            ? "bg-indigo-600 text-white shadow-md"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         } transition-all duration-200`}
                       >
                         {page}
@@ -417,14 +425,14 @@ export default function ServicesPage() {
                     )
                   )}
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(currentPage + 1)}
                     className={`p-2 rounded-full ${
                       currentPage === totalPages
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -438,7 +446,7 @@ export default function ServicesPage() {
         <AnimatePresence>
           {(addModalOpen || editModalOpen) && (
             <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -449,21 +457,21 @@ export default function ServicesPage() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-purple-300/75 w-full max-w-md mx-4 p-6 max-h-[80vh] overflow-y-auto"
+                className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-indigo-100 w-full max-w-md mx-4 p-8 max-h-[85vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-xl font-bold text-slate-800 tracking-tight">
                     {addModalOpen ? "Add New Service" : "Edit Service"}
                   </h3>
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => {
                       setAddModalOpen(false);
                       setEditModalOpen(false);
                       reset();
                     }}
-                    className="text-gray-600 hover:text-gray-800"
+                    className="text-slate-500 hover:text-slate-700 transition-colors duration-200"
                   >
                     <FiX className="text-xl" />
                   </motion.button>
@@ -473,33 +481,33 @@ export default function ServicesPage() {
                   onSubmit={handleSubmit(
                     addModalOpen ? handleAddService : handleSaveService
                   )}
-                  className="space-y-4"
+                  className="space-y-5"
                 >
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Service Name
                     </label>
                     <input
                       {...register("name", { required: "Name is required" })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                       placeholder="Enter service name"
                     />
                     {errors.name && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.name.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Category
                     </label>
                     <select
                       {...register("category", {
                         required: "Category is required",
                       })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                     >
                       <option value="">Select a category</option>
                       {[
@@ -516,82 +524,82 @@ export default function ServicesPage() {
                       ))}
                     </select>
                     {errors.category && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.category.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Description
                     </label>
                     <textarea
                       {...register("description", {
                         required: "Description is required",
                       })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 h-20 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200 h-24 resize-none"
                       placeholder="Enter service description"
                     />
                     {errors.description && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.description.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Duration (minutes)
                     </label>
-                    <div className="mt-1 relative">
-                      <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <div className="relative">
+                      {/* <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" /> */}
                       <input
                         type="number"
                         {...register("duration", {
                           required: "Duration is required",
                           min: { value: 5, message: "Minimum 5 minutes" },
                         })}
-                        className="block w-full pl-10 rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                        className="w-full pl-10 rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                         placeholder="30"
                         min="5"
                         step="5"
                       />
                     </div>
                     {errors.duration && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.duration.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Price ($)
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                      Price
                     </label>
-                    <div className="mt-1 relative">
-                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <div className="relative">
+                      {/* <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" /> */}
                       <input
                         type="number"
                         {...register("price", {
                           required: "Price is required",
                           min: { value: 0, message: "Price must be positive" },
                         })}
-                        className="block w-full pl-10 rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                        className="w-full pl-10 rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                         placeholder="0.00"
                         min="0"
                         step="0.01"
                       />
                     </div>
                     {errors.price && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.price.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Service Image (JPEG/PNG, max 5MB)
                     </label>
                     <input
@@ -603,65 +611,65 @@ export default function ServicesPage() {
                             ? true
                             : validateImage(fileList[0]),
                       })}
-                      className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                      className="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all duration-200"
                       accept="image/jpeg,image/png"
                     />
                     {errors.image && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.image.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Provider Name
                     </label>
                     <input
                       {...register("provider", {
                         required: "Provider name is required",
                       })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                       placeholder="Enter provider name"
                     />
                     {errors.provider && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.provider.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Provider Bio
                     </label>
                     <textarea
                       {...register("providerBio", {
                         required: "Bio is required",
                       })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 h-20 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200 h-24 resize-none"
                       placeholder="Enter provider bio"
                     />
                     {errors.providerBio && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.providerBio.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Availability
                     </label>
                     <input
                       {...register("availability", {
                         required: "Availability is required",
                       })}
-                      className="mt-1 block w-full rounded-xl border-gray-300 bg-gray-50 p-2 focus:outline-none focus:ring-2 focus:ring-gray-500/50"
+                      className="w-full rounded-xl border-slate-300 bg-slate-50 p-3 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                       placeholder="E.g., Mon-Sat, 9 AM - 5 PM"
                     />
                     {errors.availability && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm mt-1.5">
                         {errors.availability.message}
                       </p>
                     )}
@@ -671,19 +679,19 @@ export default function ServicesPage() {
                     <input
                       type="checkbox"
                       {...register("active")}
-                      className="h-4 w-4 text-gray-800 focus:ring-gray-500/50 border-gray-300 rounded"
+                      className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded transition-all duration-200"
                       defaultChecked={selectedService?.active || true}
                     />
-                    <label className="ml-2 block text-sm text-gray-900">
+                    <label className="ml-2 block text-sm text-slate-700">
                       Service Active
                     </label>
                   </div>
 
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.01, backgroundColor: "#4338ca" }}
+                    whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="w-full bg-gray-900 text-white py-3 rounded-xl mt-6 flex items-center justify-center gap-2"
+                    className="w-full bg-indigo-600 text-white py-3 rounded-xl mt-6 flex items-center justify-center gap-2 font-medium shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Save Changes
                   </motion.button>

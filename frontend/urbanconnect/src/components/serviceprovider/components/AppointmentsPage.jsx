@@ -23,6 +23,7 @@ export default function AppointmentsPage() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [appointments, setAppointments] = useState([]);
+  const [originalAppointments, setOriginalAppointments] = useState([]); // Store original data
   const appointmentsPerPage = 5;
 
   useEffect(() => {
@@ -35,7 +36,16 @@ export default function AppointmentsPage() {
           }
         );
         console.log("Fetched appointments:", response.data.data); // Debug log
-        setAppointments(response.data.data || []);
+        const data = response.data.data || [];
+        // Load cleared appointment IDs from localStorage
+        const clearedIds = JSON.parse(
+          localStorage.getItem("clearedAppointments") || "[]"
+        );
+        const filteredData = data.filter(
+          (appointment) => !clearedIds.includes(appointment._id)
+        );
+        setAppointments(filteredData);
+        setOriginalAppointments(data); // Save original data
       } catch (error) {
         console.error("Error fetching appointments:", error);
         alert("Failed to load appointments: " + error.message);
@@ -43,6 +53,23 @@ export default function AppointmentsPage() {
     };
     fetchAppointments();
   }, []);
+
+  // Clear individual appointment locally and store in localStorage
+  const handleClearAppointment = (appointmentId) => {
+    const updatedAppointments = appointments.filter(
+      (a) => a._id !== appointmentId
+    );
+    setAppointments(updatedAppointments);
+    setCurrentPage(1); // Reset to first page
+    // Update localStorage with cleared IDs
+    const clearedIds = JSON.parse(
+      localStorage.getItem("clearedAppointments") || "[]"
+    );
+    if (!clearedIds.includes(appointmentId)) {
+      clearedIds.push(appointmentId);
+      localStorage.setItem("clearedAppointments", JSON.stringify(clearedIds));
+    }
+  };
 
   // Filter and search
   const filteredAppointments = appointments
@@ -52,8 +79,8 @@ export default function AppointmentsPage() {
     )
     .filter(
       (appointment) =>
-        appointment.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || // Changed from client
-        appointment.service.toLowerCase().includes(searchTerm.toLowerCase())
+        appointment.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   // Pagination
@@ -87,6 +114,11 @@ export default function AppointmentsPage() {
           a._id === appointment._id ? { ...a, status: "confirmed" } : a
         )
       );
+      setOriginalAppointments(
+        originalAppointments.map((a) =>
+          a._id === appointment._id ? { ...a, status: "confirmed" } : a
+        )
+      );
       console.log("Confirmed:", appointment._id);
     } catch (error) {
       console.error("Error confirming:", error);
@@ -107,13 +139,18 @@ export default function AppointmentsPage() {
           a._id === appointment._id ? { ...a, status: "cancelled" } : a
         )
       );
+      setOriginalAppointments(
+        originalAppointments.map((a) =>
+          a._id === appointment._id ? { ...a, status: "cancelled" } : a
+        )
+      );
       console.log("Cancelled:", appointment._id);
     } catch (error) {
       console.error("Error cancelling:", error);
     }
   };
 
-  // Animation variants (unchanged)
+  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -162,37 +199,37 @@ export default function AppointmentsPage() {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8 font-sans"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
         <motion.div
           variants={cardVariants}
-          whileHover={{ scale: 1.00 }}
-          className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-purple-200/50 overflow-hidden"
+          whileHover={{ boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+          className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-100 overflow-hidden transition-all duration-300"
         >
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold text-slate-800 mb-8 tracking-tight">
               Appointments
             </h2>
-            <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row justify-between gap-5 mb-8">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <Search className="absolute left-3.5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search appointments..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-100/50 rounded-xl border border-gray-200/50 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500/50 transition-all duration-200"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800 placeholder-slate-400 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all duration-200"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <div className="relative">
                 <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-100/50 rounded-xl border border-gray-200/50 text-sm text-gray-600 hover:bg-gray-200/50 transition-all duration-200"
+                  whileHover={{ scale: 1.02, backgroundColor: "#f1f5f9" }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center gap-2 px-5 py-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-100 transition-all duration-200 shadow-sm"
                   onClick={() => setIsStatusFilterOpen(!isStatusFilterOpen)}
                 >
                   <Filter className="h-4 w-4" />
@@ -208,7 +245,7 @@ export default function AppointmentsPage() {
                       initial="hidden"
                       animate="visible"
                       exit="exit"
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-purple-200/50 z-10 overflow-hidden"
+                      className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-indigo-100 z-10 overflow-hidden"
                     >
                       {["all", "confirmed", "pending", "cancelled"].map(
                         (status) => (
@@ -216,9 +253,9 @@ export default function AppointmentsPage() {
                             key={status}
                             whileHover={{
                               scale: 1.01,
-                              backgroundColor: "#f3f4f6",
+                              backgroundColor: "#f8fafc",
                             }}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 transition-all duration-200"
+                            className="block w-full text-left px-5 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-all duration-200 font-medium"
                             onClick={() => {
                               setStatusFilter(status);
                               setIsStatusFilterOpen(false);
@@ -237,8 +274,8 @@ export default function AppointmentsPage() {
               </div>
             </div>
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200/50">
-                <thead className="bg-gray-50/50">
+              <table className="min-w-full divide-y divide-slate-200">
+                <thead className="bg-slate-50/80">
                   <tr>
                     {[
                       "Client",
@@ -250,41 +287,43 @@ export default function AppointmentsPage() {
                     ].map((col) => (
                       <th
                         key={col}
-                        className="py-3 px-4 text-left text-sm font-semibold text-gray-700"
+                        className="py-4 px-6 text-left text-sm font-semibold text-slate-700 tracking-wider"
                       >
                         {col}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200/50">
+                <tbody className="divide-y divide-slate-200 bg-white">
                   <AnimatePresence>
                     {currentAppointments.map((appointment) => (
                       <motion.tr
-                        key={appointment._id} // Use _id instead of id
+                        key={appointment._id}
                         variants={rowVariants}
                         initial="hidden"
                         animate="visible"
                         exit={{ opacity: 0, x: 20 }}
-                        className="hover:bg-gray-100/50 transition-colors duration-200"
+                        className="hover:bg-slate-50 transition-colors duration-200"
                       >
-                        <td className="py-4 px-4 text-sm font-medium text-gray-900">
-                          {appointment.fullName} {/* Changed from client */}
+                        <td className="py-4 px-6 text-sm font-medium text-slate-800">
+                          {appointment.fullName}
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
-                          {appointment.serviceName} {/* Use serviceName */}
+                        <td className="py-4 px-6 text-sm text-slate-600">
+                          {appointment.serviceName}
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600">
+                        <td className="py-4 px-6 text-sm text-slate-600">
                           {new Date(appointment.date).toLocaleDateString()},{" "}
-                          {appointment.time}
+                          <span className="font-medium">
+                            {appointment.time}
+                          </span>
                         </td>
-                        <td className="py-4 px-4 text-sm">
+                        <td className="py-4 px-6 text-sm">
                           <span
-                            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                               appointment.status === "confirmed"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-emerald-100 text-emerald-800"
                                 : appointment.status === "pending"
-                                ? "bg-yellow-100 text-yellow-800"
+                                ? "bg-amber-100 text-amber-800"
                                 : "bg-red-100 text-red-800"
                             }`}
                           >
@@ -292,48 +331,73 @@ export default function AppointmentsPage() {
                               appointment.status.slice(1)}
                           </span>
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-600 flex items-center">
+                        <td className="py-4 px-6 text-sm text-slate-600 flex items-center">
                           {appointment.mode === "in-person" ? (
                             <>
-                              <Calendar className="h-4 w-4 mr-1 text-gray-500" />
-                              In-person
+                              <Calendar className="h-4 w-4 mr-1.5 text-slate-500" />
+                              <span className="font-medium">In-person</span>
                             </>
                           ) : (
                             <>
-                              <Video className="h-4 w-4 mr-1 text-blue-500" />
-                              Video Call
+                              <Video className="h-4 w-4 mr-1.5 text-indigo-500" />
+                              <span className="font-medium">Video Call</span>
                             </>
                           )}
                         </td>
-                        <td className="py-4 px-4 text-sm text-right">
-                          <div className="flex justify-end space-x-2">
+                        <td className="py-4 px-6 text-sm text-right">
+                          <div className="flex justify-end space-x-3">
                             <motion.button
-                              whileHover={{ scale: 1.01 }}
+                              whileHover={{
+                                scale: 1.05,
+                                backgroundColor: "#dbeafe",
+                              }}
                               whileTap={{ scale: 0.95 }}
                               onClick={() => handleViewAppointment(appointment)}
-                              className="p-2 rounded-full bg-blue-500/20 text-blue-600 hover:bg-blue-500/30 transition-all duration-200"
+                              className="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all duration-200"
                             >
                               <Clock className="h-4 w-4" />
                             </motion.button>
                             {appointment.status === "pending" && (
                               <>
                                 <motion.button
-                                  whileHover={{ scale: 1.01 }}
+                                  whileHover={{
+                                    scale: 1.05,
+                                    backgroundColor: "#dcfce7",
+                                  }}
                                   whileTap={{ scale: 0.95 }}
                                   onClick={() => handleConfirm(appointment)}
-                                  className="p-2 rounded-full bg-green-500/20 text-green-600 hover:bg-green-500/30 transition-all duration-200"
+                                  className="p-2 rounded-full bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-all duration-200"
                                 >
                                   <Check className="h-4 w-4" />
                                 </motion.button>
                                 <motion.button
-                                  whileHover={{ scale: 1.01 }}
+                                  whileHover={{
+                                    scale: 1.05,
+                                    backgroundColor: "#fee2e2",
+                                  }}
                                   whileTap={{ scale: 0.95 }}
                                   onClick={() => handleCancel(appointment)}
-                                  className="p-2 rounded-full bg-red-500/20 text-red-600 hover:bg-red-500/30 transition-all duration-200"
+                                  className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-all duration-200"
                                 >
                                   <X className="h-4 w-4" />
                                 </motion.button>
                               </>
+                            )}
+                            {(appointment.status === "confirmed" ||
+                              appointment.status === "cancelled") && (
+                              <motion.button
+                                whileHover={{
+                                  scale: 1.05,
+                                  backgroundColor: "#fee2e2",
+                                }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() =>
+                                  handleClearAppointment(appointment._id)
+                                }
+                                className="p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-all duration-200"
+                              >
+                                <X className="h-4 w-4" />
+                              </motion.button>
                             )}
                           </div>
                         </td>
@@ -344,8 +408,8 @@ export default function AppointmentsPage() {
               </table>
             </div>
             {filteredAppointments.length > appointmentsPerPage && (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="text-sm text-gray-600">
+              <div className="mt-8 flex items-center justify-between">
+                <p className="text-sm text-slate-600 font-medium">
                   Showing {indexOfFirstAppointment + 1} to{" "}
                   {Math.min(
                     indexOfLastAppointment,
@@ -355,14 +419,14 @@ export default function AppointmentsPage() {
                 </p>
                 <div className="flex items-center space-x-2">
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
                     className={`p-2 rounded-full ${
                       currentPage === 1
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -371,13 +435,13 @@ export default function AppointmentsPage() {
                     (page) => (
                       <motion.button
                         key={page}
-                        whileHover={{ scale: 1.01 }}
+                        whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded-xl text-sm ${
+                        className={`px-3.5 py-1.5 rounded-xl text-sm font-medium ${
                           currentPage === page
-                            ? "bg-gray-800 text-white"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            ? "bg-indigo-600 text-white shadow-md"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         } transition-all duration-200`}
                       >
                         {page}
@@ -385,14 +449,14 @@ export default function AppointmentsPage() {
                     )
                   )}
                   <motion.button
-                    whileHover={{ scale: 1.01 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "#f1f5f9" }}
                     whileTap={{ scale: 0.95 }}
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(currentPage + 1)}
                     className={`p-2 rounded-full ${
                       currentPage === totalPages
-                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     } transition-all duration-200`}
                   >
                     <ChevronRight className="h-4 w-4" />
@@ -407,7 +471,7 @@ export default function AppointmentsPage() {
         <AnimatePresence>
           {viewModalOpen && (
             <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -418,36 +482,34 @@ export default function AppointmentsPage() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl border border-purple-200/50 w-full max-w-md mx-4 p-6"
+                className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-indigo-100 w-full max-w-md mx-4 p-8"
               >
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-xl font-bold text-slate-800 tracking-tight mb-6">
                   Appointment Details
                 </h3>
                 {selectedAppointment && (
-                  <div className="mt-4 space-y-4">
+                  <div className="space-y-5">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-slate-500 mb-1">
                         Client
                       </p>
-                      <p className="text-sm text-gray-900">
-                        {selectedAppointment.fullName}{" "}
-                        {/* Changed from client */}
+                      <p className="text-base text-slate-800 font-medium">
+                        {selectedAppointment.fullName}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-slate-500 mb-1">
                         Service
                       </p>
-                      <p className="text-sm text-gray-900">
-                        {selectedAppointment.serviceName}{" "}
-                        {/* Use serviceName */}
+                      <p className="text-base text-slate-800 font-medium">
+                        {selectedAppointment.serviceName}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-slate-500 mb-1">
                         Date & Time
                       </p>
-                      <p className="text-sm text-gray-900">
+                      <p className="text-base text-slate-800 font-medium">
                         {new Date(
                           selectedAppointment.date
                         ).toLocaleDateString()}
@@ -455,32 +517,34 @@ export default function AppointmentsPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Mode</p>
-                      <p className="text-sm text-gray-900 flex items-center">
+                      <p className="text-sm font-medium text-slate-500 mb-1">
+                        Mode
+                      </p>
+                      <p className="text-base text-slate-800 font-medium flex items-center">
                         {selectedAppointment.mode === "in-person" ? (
                           <>
-                            <Calendar className="h-4 w-4 mr-1 text-gray-500" />
+                            <Calendar className="h-4 w-4 mr-1.5 text-slate-500" />
                             In-person
                           </>
                         ) : (
                           <>
-                            <Video className="h-4 w-4 mr-1 text-blue-500" />
+                            <Video className="h-4 w-4 mr-1.5 text-indigo-500" />
                             Video Call
                           </>
                         )}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">
+                      <p className="text-sm font-medium text-slate-500 mb-1">
                         Status
                       </p>
-                      <p className="text-sm text-gray-900">
+                      <p className="text-base text-slate-800">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
                             selectedAppointment.status === "confirmed"
-                              ? "bg-green-100 text-green-800"
+                              ? "bg-emerald-100 text-emerald-800"
                               : selectedAppointment.status === "pending"
-                              ? "bg-yellow-100 text-yellow-800"
+                              ? "bg-amber-100 text-amber-800"
                               : "bg-red-100 text-red-800"
                           }`}
                         >
@@ -490,37 +554,45 @@ export default function AppointmentsPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Notes</p>
-                      <p className="text-sm text-gray-900">
-                        {selectedAppointment.notes}
+                      <p className="text-sm font-medium text-slate-500 mb-1">
+                        Notes
+                      </p>
+                      <p className="text-base text-slate-800">
+                        {selectedAppointment.notes || "No notes provided"}
                       </p>
                     </div>
-                    <div className="pt-4 flex justify-end space-x-2">
+                    <div className="pt-4 flex justify-end space-x-3">
                       {selectedAppointment.status === "pending" && (
                         <>
                           <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.95 }}
+                            whileHover={{
+                              scale: 1.02,
+                              backgroundColor: "#059669",
+                            }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => handleConfirm(selectedAppointment)}
-                            className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200"
+                            className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all duration-200 font-medium shadow-md"
                           >
                             Confirm
                           </motion.button>
                           <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.95 }}
+                            whileHover={{
+                              scale: 1.02,
+                              backgroundColor: "#dc2626",
+                            }}
+                            whileTap={{ scale: 0.98 }}
                             onClick={() => handleCancel(selectedAppointment)}
-                            className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200"
+                            className="px-5 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 font-medium shadow-md"
                           >
                             Cancel
                           </motion.button>
                         </>
                       )}
                       <motion.button
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.02, backgroundColor: "#1e293b" }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => setViewModalOpen(false)}
-                        className="px-4 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition-all duration-200"
+                        className="px-5 py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-900 transition-all duration-200 font-medium shadow-md"
                       >
                         Close
                       </motion.button>

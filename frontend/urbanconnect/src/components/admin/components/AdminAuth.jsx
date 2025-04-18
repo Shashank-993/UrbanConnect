@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -7,6 +9,10 @@ import {
   UserPlus,
   LogIn,
   Loader2,
+  Mail,
+  Lock,
+  User,
+  Shield,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast, Slide } from "react-toastify";
@@ -120,7 +126,7 @@ export default function AdminAuth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4 font-outfit">
       <div className="w-full max-w-md">
         <ToastContainer
           position="top-center"
@@ -135,39 +141,47 @@ export default function AdminAuth() {
           theme="light"
           transition={Slide}
         />
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 transform hover:shadow-xl">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 transform hover:shadow-2xl">
           {/* Header */}
-          <div className="bg-blue-600 p-6 transition-all duration-300">
-            <h1 className="text-2xl font-bold text-white text-center">
+          <div className="bg-indigo-600 p-8 transition-all duration-300">
+            <h1 className="text-2xl font-bold text-white text-center tracking-tight">
               {isLogin ? "Admin Login" : "Create Admin Account"}
             </h1>
+            <p className="text-indigo-200 text-center mt-2 font-roboto-flex">
+              {isLogin
+                ? "Sign in to access the admin dashboard"
+                : "Register a new administrator account"}
+            </p>
           </div>
 
           {/* Form */}
-          <div className="p-6 space-y-6">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="p-8 space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               {/* Name Field (Signup only) */}
               {!isLogin && (
                 <div className="space-y-2">
                   <label
                     htmlFor="name"
-                    className="text-sm font-medium text-slate-700"
+                    className="text-sm font-medium text-slate-700 block"
                   >
                     Full Name
                   </label>
-                  <input
-                    id="name"
-                    type="text"
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                      errors.name ? "border-red-500" : "border-slate-300"
-                    }`}
-                    placeholder="Enter your name"
-                    {...register("name", {
-                      required: !isLogin && "Name is required",
-                    })}
-                  />
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                    <input
+                      id="name"
+                      type="text"
+                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 font-roboto-flex ${
+                        errors.name ? "border-red-500" : "border-slate-300"
+                      }`}
+                      placeholder="Enter your name"
+                      {...register("name", {
+                        required: !isLogin && "Name is required",
+                      })}
+                    />
+                  </div>
                   {errors.name && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-xs mt-1 font-roboto-flex">
                       {errors.name.message}
                     </p>
                   )}
@@ -178,27 +192,30 @@ export default function AdminAuth() {
               <div className="space-y-2">
                 <label
                   htmlFor="email"
-                  className="text-sm font-medium text-slate-700"
+                  className="text-sm font-medium text-slate-700 block"
                 >
                   Email Address
                 </label>
-                <input
-                  id="email"
-                  type="email"
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                    errors.email ? "border-red-500" : "border-slate-300"
-                  }`}
-                  placeholder="admin@company.com"
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address",
-                    },
-                  })}
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                  <input
+                    id="email"
+                    type="email"
+                    className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 font-roboto-flex ${
+                      errors.email ? "border-red-500" : "border-slate-300"
+                    }`}
+                    placeholder="admin@company.com"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Invalid email address",
+                      },
+                    })}
+                  />
+                </div>
                 {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-500 text-xs mt-1 font-roboto-flex">
                     {errors.email.message}
                   </p>
                 )}
@@ -208,15 +225,16 @@ export default function AdminAuth() {
               <div className="space-y-2">
                 <label
                   htmlFor="password"
-                  className="text-sm font-medium text-slate-700"
+                  className="text-sm font-medium text-slate-700 block"
                 >
                   Password
                 </label>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
                   <input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                    className={`w-full pl-10 pr-12 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 font-roboto-flex ${
                       errors.password ? "border-red-500" : "border-slate-300"
                     }`}
                     placeholder="••••••••"
@@ -230,14 +248,14 @@ export default function AdminAuth() {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="text-red-500 text-xs mt-1 font-roboto-flex">
                     {errors.password.message}
                   </p>
                 )}
@@ -248,29 +266,32 @@ export default function AdminAuth() {
                 <div className="space-y-2">
                   <label
                     htmlFor="confirmPassword"
-                    className="text-sm font-medium text-slate-700"
+                    className="text-sm font-medium text-slate-700 block"
                   >
                     Confirm Password
                   </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                      errors.confirmPassword
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    }`}
-                    placeholder="••••••••"
-                    {...register("confirmPassword", {
-                      validate: (value) =>
-                        !isLogin
-                          ? value === watch("password") ||
-                            "Passwords do not match"
-                          : true,
-                    })}
-                  />
+                  <div className="relative">
+                    <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                    <input
+                      id="confirmPassword"
+                      type="password"
+                      className={`w-full pl-10 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 font-roboto-flex ${
+                        errors.confirmPassword
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      }`}
+                      placeholder="••••••••"
+                      {...register("confirmPassword", {
+                        validate: (value) =>
+                          !isLogin
+                            ? value === watch("password") ||
+                              "Passwords do not match"
+                            : true,
+                      })}
+                    />
+                  </div>
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-red-500 text-xs mt-1 font-roboto-flex">
                       {errors.confirmPassword.message}
                     </p>
                   )}
@@ -281,7 +302,7 @@ export default function AdminAuth() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 flex items-center justify-center space-x-2 mt-6 ${
+                className={`w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 mt-8 shadow-md hover:shadow-lg ${
                   isLoading ? "opacity-70 cursor-not-allowed" : ""
                 }`}
               >
@@ -301,7 +322,7 @@ export default function AdminAuth() {
               <button
                 type="button"
                 onClick={toggleView}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center mx-auto space-x-1"
+                className="text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors duration-200 flex items-center justify-center mx-auto space-x-1.5"
               >
                 {isLogin ? <UserPlus size={16} /> : <LogIn size={16} />}
                 <span>
@@ -315,7 +336,7 @@ export default function AdminAuth() {
         </div>
 
         {/* Admin Portal Text */}
-        <div className="text-center mt-6 text-slate-500">
+        <div className="text-center mt-6 text-slate-500 font-roboto-flex">
           <p>Admin Portal - Secure Access Only</p>
         </div>
       </div>

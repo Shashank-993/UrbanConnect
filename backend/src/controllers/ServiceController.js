@@ -163,6 +163,25 @@ exports.deleteService = async (req, res) => {
   }
 };
 
+exports.approveService = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { approved, status } = req.body;
+    const service = await Service.findByIdAndUpdate(
+      id,
+      { approved, status }, // Allow status update
+      { new: true, runValidators: true }
+    );
+    if (!service) return res.status(404).json({ message: "Service not found" });
+    res.json({
+      message: status ? `Service ${status}` : "Service updated",
+      service,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.updateServiceApproval = async (req, res) => {
   console.log("Session during approval request:", req.session); // Debug session
   const adminId = req.session.userId;
